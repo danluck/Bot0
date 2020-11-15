@@ -7,15 +7,28 @@ with open('token.txt', 'r') as file:
 
 bot = telebot.TeleBot(token)
 
+messageCounter = 1
+
+def printUserInfo(message):
+    global messageCounter
+    username = message.chat.username
+    print("counter=%d, username=%s"%(messageCounter,username))
+    messageCounter += 1
+
 @bot.message_handler(commands=['start'])
 def start_message(message):
-    username = message.chat.username
-    print("username=%s"%username)
+    printUserInfo(message)
     bot.send_message(message.chat.id, 'Привет, %s, ты написал мне /start'%username)
 
-bot.polling()
+@bot.message_handler(content_types=['text'])
+def send_text(message):
+    messageText = message.text.lower()
+    printUserInfo(message)
+    if messageText == 'привет':
+        bot.send_message(message.chat.id, 'Привет, мой создатель')
+    elif messageText == 'пока':
+        bot.send_message(message.chat.id, 'Прощай, создатель')
+    else:
+        bot.send_message(message.chat.id, 'echo=%s'%message.text)
 
-choice = input('Press Q to Quit')
-if choice == 'q':
-    import sys
-    sys.exit(0)
+bot.polling()
