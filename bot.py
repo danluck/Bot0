@@ -1,7 +1,5 @@
 import telebot
 
-import telebot
-
 with open('token.txt', 'r') as file:
     token = file.read()
 
@@ -18,7 +16,8 @@ def printUserInfo(message):
 @bot.message_handler(commands=['start'])
 def start_message(message):
     printUserInfo(message)
-    bot.send_message(message.chat.id, 'Привет, %s, ты написал мне /start'%username)
+    bot.send_message(message.chat.id, \
+        'Привет, %s, ты написал мне /start'%message.chat.username)
 
 @bot.message_handler(content_types=['text'])
 def send_text(message):
